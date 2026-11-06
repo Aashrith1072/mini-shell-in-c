@@ -1,9 +1,4 @@
 # Dry Run of My Mini Shell
-
-A **dry run** means following the code line by line, like the computer does, and writing down what happens at each step.
-
-Below are 7 examples, from easy to hard. In each one, I show which function runs and what its variables hold.
-
 ---
 
 ## What each function does (read this first)
