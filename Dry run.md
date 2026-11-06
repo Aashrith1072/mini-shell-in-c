@@ -6,6 +6,36 @@ Below are 7 examples, from easy to hard. In each one, I show which function runs
 
 ---
 
+## What each function does (read this first)
+
+| Function | What it does (simple) |
+|---|---|
+| `main` | The boss. Shows the prompt, reads your line, saves it in history, and runs it. Repeats until you type `exit`. |
+| `execute_line` | Cuts the line at `;` `&&` `\|\|` and runs the small commands one by one. Decides if the next one should run. |
+| `find_separator` | Looks in the line and finds the first `;`, `&&` or `\|\|`. A single `\|` is ignored, because it is a pipe. |
+| `run_segment` | Looks at one small command and chooses how to run it: pipe, built-in, or normal command. |
+| `tokenize` | Cuts a command into words. Example: `echo   hi` becomes `echo`, `hi`. Also makes `<` `>` `>>` separate words. |
+| `parse_redirections` | Finds `<` `>` `>>` and the file names. Removes them from the words, so only the real command stays. |
+| `execute_command` | Runs a normal command like `ls` or `cat`. Makes a child (`fork`), turns it into the command (`execvp`), and waits (`waitpid`). |
+| `execute_builtin_with_redirection` | Runs `cd`, `history` or `exit`. Also supports `>` and `<` for them. |
+| `handle_cd` | Does `cd`. Moves to the folder with `chdir` and remembers the old folder for `cd -`. |
+| `handle_history` | Does `history` and `history n`. Checks that `n` is a good number, then prints. |
+| `add_history` | Saves one typed line in the history list. Removes the oldest line when 2048 are full. |
+| `print_history` | Prints the last `n` lines of the history list. |
+| `split_pipeline` | Cuts a line at every `\|`, so one line becomes separate commands (maximum 3). |
+| `execute_pipeline` | Runs commands joined by pipes. Makes the tubes, one child for each command, and connects them. |
+| `report_invalid` | Prints `Invalid Command` on the real screen. |
+| `send_error` | Child sends one small byte to the parent to say "I failed". |
+
+**The path of one line:**
+```
+main -> execute_line -> run_segment -> execute_command (normal command)
+                                    -> execute_builtin_with_redirection (cd / history / exit)
+                                    -> execute_pipeline (if there is a |)
+```
+
+---
+
 ## Example 1: `echo   hello  world`
 
 (a normal command with extra spaces)
