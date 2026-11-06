@@ -1,9 +1,7 @@
 # Dry Run of My Mini Shell
----
+## What each function does 
 
-## What each function does (read this first)
-
-| Function | What it does (simple) |
+| Function | What it does |
 |---|---|
 | `main` | The boss. Shows the prompt, reads your line, saves it in history, and runs it. Repeats until you type `exit`. |
 | `execute_line` | Cuts the line at `;` `&&` `\|\|` and runs the small commands one by one. Decides if the next one should run. |
